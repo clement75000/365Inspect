@@ -147,7 +147,7 @@ Function Confirm-InstalledModules {
     $SharePoint = @{ Name = "Microsoft.Online.SharePoint.PowerShell"; MinimumVersion = "16.0.22601.12000" }
     $Graph = @{ Name = "Microsoft.Graph"; MinimumVersion = "1.9.6" }
     $MSTeams = @{ Name = "MicrosoftTeams"; MinimumVersion = "4.4.1" }
-    $psGet = @{ Name = "PowerShellGet"; RequiredVersion = "2.2.5" }
+    $psGet = @{ Name = "PowerShellGet"; MinimumVersion = "2.2.5" }
 
     Try {
         $psGetVersion = Get-InstalledModule -Name PowerShellGet -ErrorAction Stop
@@ -274,12 +274,12 @@ Function Confirm-InstalledModules {
         }
         Else {
             $message = Write-Output "`n$($module.Name) is not installed."
-            $message1 = Write-Output "The module may be installed by running `"Install-Module -Name $($module.Name) -AllowPrerelease -AllowClobber -Force -MinimumVersion $($module)`" in an elevated PowerShell window."
+            $message1 = Write-Output "The module may be installed by running `"Install-Module -Name $($module.Name) -AllowPrerelease -AllowClobber -Force -MinimumVersion $($module.MinimumVersion)`" in an elevated PowerShell window."
             Colorize Red ($message)
             Colorize Yellow ($message1)
             $install = Read-Host -Prompt "Would you like to attempt installation now? (Y|N)"
             If ($install -eq 'y') {
-                Install-Module -Name $module.Name -AllowPrerelease -AllowClobber -Scope CurrentUser -Force -MinimumVersion $module
+                Install-Module -Name $module.Name -AllowClobber -Scope CurrentUser -Force -MinimumVersion $module.MinimumVersion
                 $count ++
             }
         }
