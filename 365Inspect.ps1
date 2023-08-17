@@ -279,7 +279,7 @@ Function Confirm-InstalledModules {
             Colorize Yellow ($message1)
             $install = Read-Host -Prompt "Would you like to attempt installation now? (Y|N)"
             If ($install -eq 'y') {
-                Install-Module -Name $module.Name -AllowClobber -AllowPrerelease -Scope CurrentUser -Force -MinimumVersion $module.MinimumVersion
+                Install-Module -Name $module.Name -AllowClobber -Scope CurrentUser -Force -MinimumVersion $module.MinimumVersion
                 $count ++
             }
         }
@@ -720,28 +720,22 @@ Function All-Report {
     HTML-Report
 }
 
-If ($reportType -eq "HTML") {
-    HTML-Report
+switch ($reportType) {
+    "HTML" { HTML-Report }
+    "CSV" { CSV-Report }
+    "XML" { XML-Report }
+    "JSON" { JSON-Report }
+    default { All-Report }
 }
-Elseif ($reportType -eq "CSV") {
-    CSV-Report
-}
-Elseif ($reportType -eq "XML") {
-    XML-Report
-}
-Elseif ($reportType -eq "JSON") {
-    JSON-Report
-}
-Else {
-    All-Report
-}
+
 
 $compress = @{
     Path             = $out_path
     CompressionLevel = "Fastest"
     DestinationPath  = "$out_path\$($org_name)_Report.zip"
 }
-Compress-Archive @compress
+
+Compress-Archive @compress -force
 
 function Disconnect {
     Write-Output "Disconnect from Exchange Online"
@@ -760,6 +754,5 @@ $removeSession = Read-Host -Prompt "Do you wish to disconnect your session? (Y|N
 If ($removeSession -ne 'n') {
     Disconnect
 }
-
 
 return
