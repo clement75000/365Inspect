@@ -169,7 +169,7 @@ Function Confirm-InstalledModules {
             }
             Else {
                 Write-Host "Installing PowerShellGet`n" -ForegroundColor Magenta
-                Install-Module -Name 'PowerShellGet' -AllowPrerelease -AllowClobber -Force -MinimumVersion '2.2.5'
+                Install-Module -Name 'PowerShellGet' -AllowPrerelease -AllowClobber -Force -MinimumVersion $psGet.MinimumVersion
             }
         }
     }
@@ -279,7 +279,7 @@ Function Confirm-InstalledModules {
             Colorize Yellow ($message1)
             $install = Read-Host -Prompt "Would you like to attempt installation now? (Y|N)"
             If ($install -eq 'y') {
-                Install-Module -Name $module.Name -AllowClobber -Scope CurrentUser -Force -MinimumVersion $module.MinimumVersion
+                Install-Module -Name $module.Name -AllowClobber -AllowPrerelease -Scope CurrentUser -Force -MinimumVersion $module.MinimumVersion
                 $count ++
             }
         }
